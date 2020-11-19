@@ -149,7 +149,14 @@ class Message:
         s.sendall(login.encode('UTF-8'))
         s.sendall(recv.encode('UTF-8'))
         # time.sleep(0.15) # let the bytes on the network adaptor 
-        serverMessage = s.recv(134217728)
+        # use loop to make sure all bytes till \n are read from adaptor 
+        end_marker = '\n'
+        buffer = ''
+        while True:
+            buffer += (s.recv(1024)).decode('utf-8')
+            if end_marker in buffer:
+                break
+        serverMessage = buffer.encode('utf-8')
         s.sendall(logout.encode('UTF-8'))
         s.close()
         if (len(serverMessage)<19): return FAILED.encode('utf-8')
