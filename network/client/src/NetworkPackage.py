@@ -3,6 +3,7 @@ import time
 ERRORVAL = 1
 SUCCESS = 0
 FAILED = 'failed'
+THRESH = 5
 class CarState: 
     def __init__(self, id, dir, speed, ultra, other, x, y, r):
         self.id = id
@@ -100,15 +101,25 @@ class CarState:
         if (stateString == FAILED):
             return ERRORVAL
         self.updateState(stateString)
-        return 0
+        return SUCCESS
     def update(self, address, port, id):
+        counter = 0
         val = self.update_h(address, port, id)
-        while (val == 10):
+        while (val == FAILED and counter < THRESH):
             val = self.update_h(address, port, id)
+            counter += 1
+        if (counter == THRESH):
+            return ERRORVAL
+        return SUCCESS
     def recv(self, address, port):
+        counter = 0
         val = self.recv_h(address, port)
-        while (val == FAILED):
+        while (val == FAILED and counter < THRESH):
             val = self.recv_h(address, port)
+            counter += 1
+        if (counter == THRESH):
+            return ERRORVAL
+        return SUCCESS
                 
 class Message:
     def sendMessage(address, port, car_id, serialMessage):
@@ -137,7 +148,7 @@ class Message:
         # login and recv message
         s.sendall(login.encode('UTF-8'))
         s.sendall(recv.encode('UTF-8'))
-        time.sleep(0.15)
+        # time.sleep(0.15) # let the bytes on the network adaptor 
         serverMessage = s.recv(134217728)
         s.sendall(logout.encode('UTF-8'))
         s.close()

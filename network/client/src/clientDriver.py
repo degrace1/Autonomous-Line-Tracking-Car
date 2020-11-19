@@ -23,7 +23,8 @@ r = 11.0;
 # r = 19999; 
 
 # static values 
-address = '100.26.217.199'
+# address = '100.26.217.199'
+address = '127.0.0.1'
 port = 6789
 
 # log test values 
@@ -44,34 +45,49 @@ carState1.send(address,port)
 carState2.send(address,port)
 
 # request state from server 
-carState1.update(address,port, CAR_ID)
-print("Server info on car 1")
-print(carState1.toString())
+error = carState1.update(address,port, CAR_ID)
+if (error == 1):
+    print("error!")
+else: 
+    print("Server info on car 1")
+    print(carState1.toString())
 
 # edit location of state 2
-carState2.setLocation(1,1,1)
-carState2.send(address,port)
-print("Server info on car 2")
-print(carState2.toString())
+# carState2.setLocation(1,1,1)
+# carState2.send(address,port)
+# print("Server info on car 2")
+# print(carState2.toString())
 
 # request state of different car from user (by id)
-carState2.update(address,port,CAR_ID)
-print("Overwrite state of car 2 w/ car 1")
-print(carState2.toString())
+error = carState2.update(address,port,CAR_ID)
+if (error == 1):
+    print("error!")
+else:
+    print("Overwrite state of car 2 w/ car 1")
+    print(carState2.toString())
 
 # request state of yourself
-carState2.recv(address,port)
-print("Poll car 2 state (revc)")
-print(carState2.toString())
+error = carState2.recv(address,port)
+if (error == 1):
+    print("error!")
+else: 
+    print("Poll car 2 state (revc)")
+    print(carState2.toString())
 
 # request state of yourself
-carState2.update(address,port,carState2.getID())
-print("Poll car 2 state (update)")
-print(carState2.toString())
+error = carState2.update(address,port,carState2.getID())
+if (error == 1):
+    print("error!")
+else: 
+    print("Poll car 2 state (update)")
+    print(carState2.toString())
 
 # test log format
-carState1.log()
-carState1.logInLine()
+# carState1.log()
+# carState1.logInLine()
+
+#TODO: test on pi w/ aws server and hotspot 
+# if still failing then put the time.sleep back in the NetworkPackage file
 
 
 

@@ -45,7 +45,9 @@ tempCarObj = CarState(0, 0, 0, 0, 0, 0, 0, 0)
 tempCarObj.update(address,port,CAR_ID) 
 
 // or, we can just update the state of an exisiting obj
-carStateEx.update(address,port,carStateEx.getID) 
+error = carStateEx.update(address,port,carStateEx.getID) 
+if (error != 0): 
+    # handle it somehow -> redo?
 ```
 ### Debugging: 
 Use these log statements to see if the state is correct with what you expect: 

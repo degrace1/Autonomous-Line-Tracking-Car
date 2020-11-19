@@ -6,7 +6,9 @@ import java.net.Socket;
 
 public class ClientTest {
     // host address
-    private static final String HOST_ADDRESS = "127.0.0.1";  
+    //private static final String HOST_ADDRESS = "127.0.0.1";  
+    private static final String HOST_ADDRESS = "100.26.217.199";  
+
     // port              
     private static final int PORT = 6789; 
 
