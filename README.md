@@ -44,7 +44,8 @@ carStateEx = CarState(CAR_ID, direction, speed, ultrasonic, othercars, x, y, r);
 ### Updating:
 The moving, ultrasound, and object detection functions will write and modify parameters in the carState. After all writes, these functions should call the **send** function to update the state in the server
 ```
-// server IP address and port will be global constants at top of main file -> my aws server will have static public ip when running
+// server IP address and port will be global constants at top of main file
+// use hosted aws server w/ public ip when running
 address = '127.0.0.1'
 port = 6789
 
