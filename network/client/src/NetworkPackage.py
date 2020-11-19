@@ -1,3 +1,4 @@
+
 import socket 
 import time
 ERRORVAL = 1
@@ -8,16 +9,24 @@ THRESH = 5
 class CarState: 
 
     # Constructor
-    def __init__(self, id, dir, speed, ultra, other, x, y, r):
-        self.id = id
-        self.direction = dir
-        self.speed = speed
-        self.ultrasonic = ultra
-        self.other = other
-        self.location = []
-        self.location.append(x)
-        self.location.append(y)
-        self.location.append(r)
+    def __init__(self, id, dir, speed, ultra, other, x, y, r, carCopy = None):
+        if isinstance(carCopy, CarState): # Acts as a copy constructor
+            self.id = carCopy.getID
+            self.direction = carCopy.getDirection
+            self.speed = carCopy.getSpeed
+            self.ultrasonic = carCopy.getUltrasonic
+            self.location = carCopy.getLocation
+            self.other = carCopy.getOther
+        else: # Default constructor
+            self.id = id
+            self.direction = dir
+            self.speed = speed
+            self.ultrasonic = ultra
+            self.other = other
+            self.location = []
+            self.location.append(x)
+            self.location.append(y)
+            self.location.append(r)
 
     # all set methods for member variables 
     def setID(self, id):
@@ -41,13 +50,13 @@ class CarState:
     # all get methods for member variables 
     def getID(self):
         return self.id
-    def setDirection(self):
+    def getDirection(self):
         return self.direction
-    def setSpeed(self):
+    def getSpeed(self):
         return self.speed
-    def setUltrasonic(self):
+    def getUltrasonic(self):
         return self.ultrasonic
-    def setOther(self):
+    def getOther(self):
         return self.other
     def getLocation(self):
         return self.location
