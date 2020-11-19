@@ -25,12 +25,13 @@ y = 10.0;
 r = 11.0; 
 
 // make object using car conditions
-carStateEx = CarState(CAR_ID, direction, speed, ultrasonic, othercars, x, y, r); //note: no default constructer since python is cant have overloaded functions :(
+//note: no default constructer since python is cant have overloaded functions :(
+carStateEx = CarState(CAR_ID, direction, speed, ultrasonic, othercars, x, y, r); 
 ```
 ### Updating:
 The moving, ultrasound, and object detection functions will write and modify parameters in the carState. After all writes, these functions should call the **send** function to update the state in the server
 ```
-// server IP address and port will be global constants at top of main file
+// server IP address and port will be global constants at top of main file -> my aws server will have static public ip when running
 address = '127.0.0.1'
 port = 6789
 
@@ -47,7 +48,7 @@ tempCarObj.update(address,port,CAR_ID)
 // or, we can just update the state of an exisiting obj
 error = carStateEx.update(address,port,carStateEx.getID) 
 if (error != 0): 
-    # handle it somehow -> redo?
+    # handle it somehow -> means car polled server for had no state recorded
 ```
 ### Debugging: 
 Use these log statements to see if the state is correct with what you expect: 

@@ -28,6 +28,7 @@ address = '127.0.0.1'
 port = 6789
 
 # log test values 
+print()
 print("Test Values for State"); 
 print("CAR_ID = " + str(CAR_ID)); 
 print("direction = " + str(direction)); 
@@ -45,6 +46,7 @@ carState1.send(address,port)
 carState2.send(address,port)
 
 # request state from server 
+print()
 error = carState1.update(address,port, CAR_ID)
 if (error == 1):
     print("error!")
@@ -53,12 +55,14 @@ else:
     print(carState1.toString())
 
 # edit location of state 2
-# carState2.setLocation(1,1,1)
-# carState2.send(address,port)
-# print("Server info on car 2")
-# print(carState2.toString())
+carState2.setLocation(1,1,1)
+carState2.send(address,port)
+print()
+print("Server info on car 2")
+print(carState2.toString())
 
 # request state of different car from user (by id)
+print()
 error = carState2.update(address,port,CAR_ID)
 if (error == 1):
     print("error!")
@@ -66,7 +70,17 @@ else:
     print("Overwrite state of car 2 w/ car 1")
     print(carState2.toString())
 
+# request state of !unknown! car from user (by id)
+print()
+error = carState2.update(address,port,100)
+if (error == 1):
+    print("error! - expected so good")
+else:
+    print("Overwrite state of car 2 w/ car 10000")
+    print(carState2.toString())
+
 # request state of yourself
+print()
 error = carState2.recv(address,port)
 if (error == 1):
     print("error!")
@@ -75,6 +89,7 @@ else:
     print(carState2.toString())
 
 # request state of yourself
+print()
 error = carState2.update(address,port,carState2.getID())
 if (error == 1):
     print("error!")
@@ -83,8 +98,11 @@ else:
     print(carState2.toString())
 
 # test log format
-# carState1.log()
-# carState1.logInLine()
+print()
+carState1.log()
+print()
+carState1.logInLine()
+print()
 
 #TODO: test on pi w/ aws server and hotspot 
 # if still failing then put the time.sleep back in the NetworkPackage file

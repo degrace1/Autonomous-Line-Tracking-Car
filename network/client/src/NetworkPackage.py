@@ -3,8 +3,11 @@ import time
 ERRORVAL = 1
 SUCCESS = 0
 FAILED = 'failed'
+NO_STATE = 'none'
 THRESH = 5
 class CarState: 
+
+    # Constructor
     def __init__(self, id, dir, speed, ultra, other, x, y, r):
         self.id = id
         self.direction = dir
@@ -15,6 +18,8 @@ class CarState:
         self.location.append(x)
         self.location.append(y)
         self.location.append(r)
+
+    # all set methods for member variables 
     def setID(self, id):
         self.id = id
     def setDirection(self, dir):
@@ -32,6 +37,8 @@ class CarState:
     def setLocation(self,x,y,r):
         self.location.clear()
         self.addLocation(x,y,r)
+
+    # all get methods for member variables 
     def getID(self):
         return self.id
     def setDirection(self):
@@ -44,6 +51,8 @@ class CarState:
         return self.other
     def getLocation(self):
         return self.location
+
+    # serialize state to string
     def toString(self):
         temp = ""
         delim = ","
@@ -55,6 +64,8 @@ class CarState:
         for i in self.location:
             temp += delim + str(i)
         return temp
+
+    # show obj params in paragraph form 
     def log(self):
         print("car id: " + str(self.id))
         print("direction: " + str(self.direction))
@@ -63,6 +74,8 @@ class CarState:
         print("x: " + str(self.location[0]))
         print("y: " + str(self.location[1]))
         print("z: " + str(self.location[2]))
+
+    # show obj params in linear form 
     def logInLine(self):
         temp = ""
         delim = ","
@@ -75,6 +88,7 @@ class CarState:
         temp += "z=" + str(self.location[2])
         print(temp)
 
+    # update the state of obj using serial state string from server
     def updateState(self, serialString):
         s = serialString.split(",")
         if (len(s) < 8): return ERRORVAL
@@ -87,80 +101,105 @@ class CarState:
         for i in range(self.other * 3):
            self.location.append(float(s[5+i]))
         return SUCCESS
+    
+    # send state for this obj to server
     def send(self, address, port):
         message = self.toString()
         Message.sendMessage(address, port, self.id, message)
-    def recv_h(self, address, port):
-        return (Message.recvMessage(address, port, self.id).decode('UTF-8').rstrip())
+    
+    # get state string from server for this obj
+    def recv(self, address, port):
+        return (Message.recvMessage(address, port, self.id).rstrip())
+    
+    # get state string from server using id
     def recvByID(address, port, int):
-        return (Message.recvMessage(address, port, int).decode('UTF-8').rstrip())
-    # returns string 'failed' if full message is not received from server.. retry until you dont get the failed msg
-    def update_h(self, address, port, id):
+        return (Message.recvMessage(address, port, int).rstrip())
+
+    # returns ERRORVAL if server had no state for the car requested
+    def update(self, address, port, id):
         state = CarState.recvByID(address,port,id)
         stateString = Message.decodeMessage(state)
-        if (stateString == FAILED):
+        if (stateString == NO_STATE):
             return ERRORVAL
         self.updateState(stateString)
         return SUCCESS
-    def update(self, address, port, id):
-        counter = 0
-        val = self.update_h(address, port, id)
-        while (val == FAILED and counter < THRESH):
-            val = self.update_h(address, port, id)
-            counter += 1
-        if (counter == THRESH):
-            return ERRORVAL
-        return SUCCESS
-    def recv(self, address, port):
-        counter = 0
-        val = self.recv_h(address, port)
-        while (val == FAILED and counter < THRESH):
-            val = self.recv_h(address, port)
-            counter += 1
-        if (counter == THRESH):
-            return ERRORVAL
-        return SUCCESS
+    # def update(self, address, port, id):
+    #     counter = 0
+    #     val = self.update_h(address, port, id)
+    #     while (val == FAILED and counter < THRESH):
+    #         val = self.update_h(address, port, id)
+    #         counter += 1
+    #     if (counter == THRESH):
+    #         return ERRORVAL
+    #     return SUCCESS
+    # def recv(self, address, port):
+    #     counter = 0
+    #     val = self.recv_h(address, port)
+    #     while (val == FAILED and counter < THRESH):
+    #         val = self.recv_h(address, port)
+    #         counter += 1
+    #     if (counter == THRESH):
+    #         return ERRORVAL
+    #     return SUCCESS
                 
 class Message:
+
+    # send state to server using id
     def sendMessage(address, port, car_id, serialMessage):
         s = socket.socket()
         s.connect((address,port))
-        # type=log_in&car_id=[car_id]\n
+        # login: type=log_in&car_id=[car_id]\n
         login = 'type=log_in&car_id='
         login += str(car_id) + '\n'
-        #type=send_state&state=[serialMessage]\n
+
+        #send message: type=send_state&state=[serialMessage]\n
         send = 'type=send_state&state='
         send += serialMessage +'\n'
         logout = 'type=logout\n'
-        # login and send message
+
+        # login. send message, send message, and then close socket 
         s.sendall(login.encode('UTF-8'))
         s.sendall(send.encode('UTF-8'))
         s.sendall(logout.encode('UTF-8'))
         s.close()
+
+    # poll server for state of car by id 
     def recvMessage(address, port, car_id):
+        # connect to socket 
         s = socket.socket()
         s.connect((address,port))
-        # type=log_in&car_id=[car_id]\n
+
+        # login: type=log_in&car_id=[car_id]\n
         login = 'type=log_in&car_id='
         login += str(car_id) + '\n'
+
+        # recv: type=request_state\n
         recv = 'type=request_state\n'
+
+        # logout: 'type=logout\n
         logout = 'type=logout\n'
-        # login and recv message
+
+        # send login and recv message
         s.sendall(login.encode('UTF-8'))
         s.sendall(recv.encode('UTF-8'))
-        # time.sleep(0.15) # let the bytes on the network adaptor 
+
         # use loop to make sure all bytes till \n are read from adaptor 
+        # do a max of 5 times to prevent inf loop ?
         end_marker = '\n'
         buffer = ''
-        while True:
+        while (True):
             buffer += (s.recv(1024)).decode('utf-8')
             if end_marker in buffer:
                 break
-        serverMessage = buffer.encode('utf-8')
+        
+        # log out of server and close socket
         s.sendall(logout.encode('UTF-8'))
         s.close()
-        if (len(serverMessage)<19): return FAILED.encode('utf-8')
-        return serverMessage
+
+        # return serial state from buffer if mesage got to \n
+        return buffer
+
+    # decode serial state encoded in message 
     def decodeMessage(serialMessage):
         s = serialMessage.split('&')
         for i in s:
