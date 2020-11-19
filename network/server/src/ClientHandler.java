@@ -83,7 +83,11 @@ class ClientHandler implements Runnable {
                     synchronized(myCars){
                         this.myCars.add(Integer.parseInt(id), state);
                     }
-                    System.out.println("Added state: " + myCars.getStates().toString());
+                    System.out.println("Added state: " + this.myCars.getStates().toString());
+                    Message ack = new Message(); 
+                    ack.putParam(Message.TYPE_KEY, Message.SEND_ACK); 
+                    toClient.writeBytes(ack.toString() +'\n');
+                    System.out.println("Sent Ack to Client: "+ id);
                     break; 
                 case (Message.REQ_STATE_COMMAND):
                     Message stateToSend = new Message(); 

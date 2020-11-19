@@ -12,6 +12,7 @@ public class Message {
     public static final String LOGOUT_COMMAND = "log_out"; 
     public static final String REQ_STATE_COMMAND = "request_state"; 
     public static final String SEND_STATE_COMMAND = "send_state"; 
+    public static final String SEND_ACK = "send_ack"; 
 
     // parameters 
     public static final String TYPE_KEY = "type";

@@ -106,7 +106,7 @@ class CarState:
     def send(self, address, port):
         message = self.toString()
         Message.sendMessage(address, port, self.id, message)
-    
+   
     # get state string from server for this obj
     def recv(self, address, port):
         return (Message.recvMessage(address, port, self.id).rstrip())
@@ -115,13 +115,14 @@ class CarState:
     def recvByID(address, port, int):
         return (Message.recvMessage(address, port, int).rstrip())
 
-    # returns ERRORVAL if server had no state for the car requested
+    # returns ERRORVAL if server had no state for the car requested or if state could not be updated correctly
     def update(self, address, port, id):
         state = CarState.recvByID(address,port,id)
         stateString = Message.decodeMessage(state)
         if (stateString == NO_STATE):
             return ERRORVAL
-        self.updateState(stateString)
+        error = self.updateState(stateString)
+        if (error == ERRORVAL): return ERRORVAL
         return SUCCESS
     # def update(self, address, port, id):
     #     counter = 0
@@ -146,8 +147,10 @@ class Message:
 
     # send state to server using id
     def sendMessage(address, port, car_id, serialMessage):
+        # connect to socket 
         s = socket.socket()
         s.connect((address,port))
+
         # login: type=log_in&car_id=[car_id]\n
         login = 'type=log_in&car_id='
         login += str(car_id) + '\n'
@@ -157,9 +160,19 @@ class Message:
         send += serialMessage +'\n'
         logout = 'type=logout\n'
 
-        # login. send message, send message, and then close socket 
+         # login. send message
         s.sendall(login.encode('UTF-8'))
         s.sendall(send.encode('UTF-8'))
+
+        # get ack from server send before proceeding
+        end_marker = '\n'
+        buffer = ''
+        while (True):
+            buffer += (s.recv(1024)).decode('utf-8')
+            if (end_marker in buffer) and (buffer == 'type=send_ack\n'):
+                break
+        
+        #logout, and then close socket 
         s.sendall(logout.encode('UTF-8'))
         s.close()
 
