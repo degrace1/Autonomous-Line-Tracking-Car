@@ -23,7 +23,7 @@ r = 11.0;
 # r = 19999; 
 
 # static values 
-address = '127.0.0.1'
+address = '100.26.217.199'
 port = 6789
 
 # log test values 

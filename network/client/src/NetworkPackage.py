@@ -103,7 +103,7 @@ class CarState:
         return 0
     def update(self, address, port, id):
         val = self.update_h(address, port, id)
-        while (val == ERRORVAL):
+        while (val == 10):
             val = self.update_h(address, port, id)
     def recv(self, address, port):
         val = self.recv_h(address, port)
@@ -137,7 +137,7 @@ class Message:
         # login and recv message
         s.sendall(login.encode('UTF-8'))
         s.sendall(recv.encode('UTF-8'))
-        #time.sleep(0.15)
+        time.sleep(0.15)
         serverMessage = s.recv(134217728)
         s.sendall(logout.encode('UTF-8'))
         s.close()
