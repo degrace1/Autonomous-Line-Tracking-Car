@@ -120,9 +120,11 @@ class Message:
         #type=send_state&state=[serialMessage]\n
         send = 'type=send_state&state='
         send += serialMessage +'\n'
+        logout = 'type=logout\n'
         # login and send message
         s.sendall(login.encode('UTF-8'))
         s.sendall(send.encode('UTF-8'))
+        s.sendall(logout.encode('UTF-8'))
         s.close()
     def recvMessage(address, port, car_id):
         s = socket.socket()
@@ -131,11 +133,13 @@ class Message:
         login = 'type=log_in&car_id='
         login += str(car_id) + '\n'
         recv = 'type=request_state\n'
+        logout = 'type=logout\n'
         # login and recv message
         s.sendall(login.encode('UTF-8'))
         s.sendall(recv.encode('UTF-8'))
         #time.sleep(0.15)
         serverMessage = s.recv(134217728)
+        s.sendall(logout.encode('UTF-8'))
         s.close()
         if (len(serverMessage)<19): return FAILED.encode('utf-8')
         return serverMessage
