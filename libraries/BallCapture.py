@@ -6,20 +6,15 @@ import imutils
 import time
 from imutils.video import VideoStream
 
-
-def coloredBallTracking(frame):
-        #vs = VideoStream(src=0).start()
-        yellowLower = (26,43,46)
-        yellowUpper = (34,255,255)
-        minR = 0
-        maxR = 80
-        # select three frames
+'''given the fame (image of each capture)'''
+def coloredBallTracking(vs, yellowLower = (26,43,46), yellowUpper = (34,255,255), minR = 0, maxR = 80):
         x = 0
         y = 0
         radius = 0
-        for i in range(1):
-        # grab the current frame
-            #frame = vs.read()
+        # here is a small loop because some times the algorithm may fail to capture the colored in a frame, let ot 
+        for i in range(3):
+            # grab the current frame
+            frame = vs.read()
             if frame is None:
                 break
             # denoise with filter and convert it to the HSV soace
@@ -36,7 +31,8 @@ def coloredBallTracking(frame):
             cnts = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
             cnts = imutils.grab_contours(cnts)
             center = None
-
+            
+            #find the max connected part
             if len(cnts) > 0:
                 c = max(cnts, key=cv2.contourArea)
                 ((x, y), radius) = cv2.minEnclosingCircle(c)
