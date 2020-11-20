@@ -132,3 +132,84 @@ request_state|car_id:String
 ---
 ### Contact Info: 
 - Yoni Xiong : yoni.xiong@vanderbilt.edu
+
+----
+# Object Detection and Tracking for Autonomous Car
+
+## Implement:
+
+Instead of detecting the car iteslf, we put a colored ball on the top of each car and let the other smarts to detect and track it.
+
+## Goals: 
+- Detect the other cars (colored balls) in real time and return its pixel location in the image
+- Given the radius of the detected ball, predict the distance
+- Keep track of the colored ball
+----
+
+## Functions in object detection & tracking module
+In the folder of libraries: BallCapture.py DistanceCamera.py
+
+- **coloredBallTracking** (vs, yellowLower , yellowUpper , minR , maxR) in BallCapture.py
+
+Before calling this function, videostream handler should be created first.
+
+-- Input: vs: videostream handler, yellowLower: HSV space lower threshold of yellow color, yellowUpper: HSV space upper threshold of yellow color , minR: minimun ball size , maxR:maximum ball size. 'yellowLower' , 'yellowUpper' , 'minR' , 'maxR' they all have default settings and we do not have to change them.
+
+-- Output: this function will return a list including [x,y,r], where x is the x axis pixel location of the ball center, y is the y axis pixel location of the ball center, r is the radius of the ball. When there is no ball detected it will return [0,0,0]
+
+
+- **dVision** (radius) in DistanceCamera.py
+
+-- Input: radius: radius of the ball.
+
+-- Output: predicted distance of the ball (cm).
+
+## Example for using detection & tracking module
+
+```
+from BallCapture import *
+from ExampleCamera import *
+from DistanceCamera import *
+from imutils.video import VideoStream
+import cv2
+import imutils
+
+
+#start video stream
+#notice: the video stream should be created out of the loop
+vs = VideoStream(src=0).start()
+#warm up
+time.sleep(2.0)
+
+for i in range(1000):
+    #calling coloredBallTracking()
+    result = coloredBallTracking(vs)
+    print(result)
+    # if it detects a ball and retrun a non sero radius
+    if result[2] != 0:
+        #compute distance of the ball
+        print(dVision(result[2]))
+
+#close the camera and all windows
+vs.stop()
+cv2.destroyAllWindows() 
+```
+
+## How to test the camera
+```
+python camera.py
+
+```
+It  will pop up a window shows the capture of the video. Put the mouse on this window, press button 'q' in the keyboard, then the camera will be closed. The output video will be saved in the file named 'output.avi' in current folder.
+
+**note:** To make the test more efficient, please test it in the same background and brightness as the demo. And put the colored ball before the camera and move it slowly. 
+
+## Some advice for using this module
+
+- It performs well when the background is simple, without any yellow color components. A good brightness with neither too strong nor too weak lightness is also prefered. 
+- It may fail to detect the ball in some frames.
+- It is very sensitive to the light and background. After moving on to a new background, we should adjust the parameters. again
+
+### Contact Info: 
+- Yubo Du : yubo.du@vanderbilt.edu
+
