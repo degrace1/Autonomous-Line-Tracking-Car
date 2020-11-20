@@ -1,4 +1,8 @@
 import numpy as np
+import math 
+
 def dVision(radius):
-    return -0.1424 - (-0.013599/0.06828606)(1 - np.pow(e,-0.06828606 * (1/radius)))
+    v = math.exp(-12.48963 * (1/radius))
+    d = -8.974553 - (-2003.164/12.48963)*(1 - v)
+    return d
     
