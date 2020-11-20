@@ -138,31 +138,50 @@ request_state|car_id:String
 
 ## Implement:
 
-Instead of detecting the car iteslf, we put a colored ball on the top of each car and let the other smarts to detect and track it.
+Instead of detecting the car iteslf, we put a colored ball on the top of each car and let the other smart cars to detect and track it.
 
 ## Goals: 
-- Detect the other cars (colored balls) in real time and return its pixel location in the image
-- Given the radius of the detected ball, predict the distance
-- Keep track of the colored ball
+- Detect the other cars (colored balls) in real time and return its pixel location in the image.
+- Given the radius of the detected ball, predict the distance (cm).
+- Keep tracking of the colored ball adn label it in the video.
 ----
 
 ## Functions in object detection & tracking module
-In the folder of libraries: BallCapture.py DistanceCamera.py
 
-- **coloredBallTracking** (vs, yellowLower , yellowUpper , minR , maxR) in BallCapture.py
+### coloredBallTracking (vs, yellowLower , yellowUpper , minR , maxR) in BallCapture.py
 
 Before calling this function, videostream handler should be created first.
 
--- Input: vs: videostream handler, yellowLower: HSV space lower threshold of yellow color, yellowUpper: HSV space upper threshold of yellow color , minR: minimun ball size , maxR:maximum ball size. 'yellowLower' , 'yellowUpper' , 'minR' , 'maxR' they all have default settings and we do not have to change them.
+#### Input
+Params | description 
+------- | ----
+vs |  videostream handler
+yellowLower| lower threshold of yellow color in HSV
+yellowUpper| upper threshold of yellow color in HSV
+minR| minimun ball size
+maxR| maximum ball size
 
--- Output: this function will return a list including [x,y,r], where x is the x axis pixel location of the ball center, y is the y axis pixel location of the ball center, r is the radius of the ball. When there is no ball detected it will return [0,0,0]
+'yellowLower' , 'yellowUpper' , 'minR' , 'maxR' they all have default settings and we do not have to change them.
+
+#### Output
+This function will return a list [x,y,r]
+
+Params | description 
+------- | ----
+x |   x axis pixel location of the ball center
+y| y axis pixel location of the ball center
+r| radius of the ball
+
+When there is no ball detected it will return [0,0,0]
 
 
-- **dVision** (radius) in DistanceCamera.py
+### dVision(radius) in DistanceCamera.py
 
--- Input: radius: radius of the ball.
+#### Input
+radius of the ball.
 
--- Output: predicted distance of the ball (cm).
+#### Output
+predicted distance of the ball (cm).
 
 ## Example for using detection & tracking module
 
