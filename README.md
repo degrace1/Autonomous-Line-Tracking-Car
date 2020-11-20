@@ -143,7 +143,7 @@ Instead of detecting the car iteslf, we put a colored ball on the top of each ca
 ## Goals: 
 - Detect the other cars (colored balls) in real time and return its pixel location in the image.
 - Given the radius of the detected ball, predict the distance (cm).
-- Keep tracking of the colored ball adn label it in the video.
+- Keep tracking of the colored ball and label it in the video.
 ----
 
 ## Functions in object detection & tracking module
@@ -152,7 +152,8 @@ Instead of detecting the car iteslf, we put a colored ball on the top of each ca
 
 Before calling this function, videostream handler should be created first.
 
-#### Input
+- #### Input
+
 Params | description 
 ------- | ----
 vs |  videostream handler
@@ -163,7 +164,7 @@ maxR| maximum ball size
 
 'yellowLower' , 'yellowUpper' , 'minR' , 'maxR' they all have default settings and we do not have to change them.
 
-#### Output
+- #### Output
 This function will return a list [x,y,r]
 
 Params | description 
@@ -177,10 +178,10 @@ When there is no ball detected it will return [0,0,0]
 
 ### dVision(radius) in DistanceCamera.py
 
-#### Input
+- #### Input
 radius of the ball.
 
-#### Output
+- #### Output
 predicted distance of the ball (cm).
 
 ## Example for using detection & tracking module
@@ -204,7 +205,7 @@ for i in range(1000):
     #calling coloredBallTracking()
     result = coloredBallTracking(vs)
     print(result)
-    # if it detects a ball and retrun a non sero radius
+    # if it detects a ball and return a non zero radius
     if result[2] != 0:
         #compute distance of the ball
         print(dVision(result[2]))
@@ -219,15 +220,15 @@ cv2.destroyAllWindows()
 python camera.py
 
 ```
-It  will pop up a window shows the capture of the video. Put the mouse on this window, press button 'q' in the keyboard, then the camera will be closed. The output video will be saved in the file named 'output.avi' in current folder.
+It will pop up a window showing the capture of the video. Put the mouse on this window, press button 'q' in the keyboard, then the video will be terminated. The output video will be saved in the file named 'output.avi' in current folder.
 
-**note:** To make the test more efficient, please test it in the same background and brightness as the demo. And put the colored ball before the camera and move it slowly. 
+**note:** To make the test more efficient, please test it in the same background and brightness as the demo. And put the colored ball before the camera with moving it slowly. 
 
-## Some advice for using this module
+## Some advices for using this module
 
 - It performs well when the background is simple, without any yellow color components. A good brightness with neither too strong nor too weak lightness is also prefered. 
-- It may fail to detect the ball in some frames.
-- It is very sensitive to the light and background. After moving on to a new background, we should adjust the parameters. again
+- It may fail to detect the ball in some frames but will work in most cases.
+- It is very sensitive to the light and background. After moving on to a new background, we should adjust the parameters again.
 
 ### Contact Info: 
 - Yubo Du : yubo.du@vanderbilt.edu
