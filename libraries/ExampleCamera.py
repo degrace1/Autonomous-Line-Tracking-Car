@@ -16,9 +16,21 @@ time.sleep(2.0)
 for i in range(1000):
     #get the information of each frame
     print(c.captureOne())
-
 #end the program
 c.endAll()
-#close the camera and all windows
 
  
+''' you can also use this class
+
+c = BallCapture()
+
+time.sleep(2.0)
+for i in range(1000):
+    #get the information of each frame
+    x,y,radius = c.captureOne()
+    distance = c.dVision(radius)
+    print(x,y,radius,distance)
+#end the program
+c.endAll()
+
+'''
