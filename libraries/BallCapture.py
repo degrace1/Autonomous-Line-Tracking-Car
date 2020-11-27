@@ -4,17 +4,28 @@ import argparse
 import cv2
 import imutils
 import time
+import math 
 from imutils.video import VideoStream
+from datetime import datetime
 
 '''given the fame (image of each capture)'''
-def coloredBallTracking(vs, yellowLower = (26,43,46), yellowUpper = (34,255,255), minR = 0, maxR = 80):
+class BallCapture:
+    
+    def __init__(self,yellowLower = (26,43,46), yellowUpper = (34,255,255), minR = 0, maxR = 80):
+        self.vs = VideoStream(src=0).start()
+        self.yellowLower = yellowLower
+        self.yellowUpper = yellowUpper
+        self.minR = minR
+        self.maxR = maxR
+        
+    def coloredBallTracking(self):
         x = 0
         y = 0
         radius = 0
         # here is a small loop because some times the algorithm may fail to capture the colored in a frame, let ot 
         for i in range(3):
             # grab the current frame
-            frame = vs.read()
+            frame = self.vs.read()
             if frame is None:
                 break
             # denoise with filter and convert it to the HSV soace
@@ -23,7 +34,7 @@ def coloredBallTracking(vs, yellowLower = (26,43,46), yellowUpper = (34,255,255)
             hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)
 
             #mask teh yellow area and denoise with erode and dilation
-            mask = cv2.inRange(hsv, yellowLower, yellowUpper)
+            mask = cv2.inRange(hsv, self.yellowLower, self.yellowUpper)
             mask = cv2.erode(mask, None, iterations=3)
             mask = cv2.dilate(mask, None, iterations=3)
 
@@ -40,7 +51,7 @@ def coloredBallTracking(vs, yellowLower = (26,43,46), yellowUpper = (34,255,255)
                 center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
 
                 # only proceed if the radius meets a minimum size
-                if radius > minR and radius < maxR:
+                if radius > self.minR and radius < self.maxR:
                     cv2.circle(frame, (int(x), int(y)), int(radius),(0, 255, 255), 2)
                     cv2.circle(frame, center, 5, (0, 0, 255), -1)
 
@@ -48,6 +59,28 @@ def coloredBallTracking(vs, yellowLower = (26,43,46), yellowUpper = (34,255,255)
             cv2.imshow("Frame", frame)
             cv2.imshow("Mask", mask)
             key = cv2.waitKey(1) & 0xFF
-            cv2.imwrite('p'+str(i)+'.jpg',frame)
+            cv2.imwrite('p'+datetime.now().strftime("%d/%m/%Y %H:%M:%S")+'.jpg',frame)
         
         return x,y,radius
+    
+    # compute the distance of a car given radius of the ball
+    def dVision(self,radius):
+        v = math.exp(-12.48963 * (1/radius))
+        d = -8.974553 - (-2003.164/12.48963)*(1 - v)
+        return d
+    
+    # capture the ball and compute the distance 
+    def captureOne(self):
+        # result = [x,y,radius]
+        result = self.coloredBallTracking()
+        print(result)
+        # if result[2] (radius) == 0, then there is no ball detected
+        if result[2] != 0:
+            dis = self.dVision(result[2])
+            print(dis)
+            return result[0],result[1],result[2],dis
+        else:
+            return 0,0,0,-1
+    def endAll(self):
+        self.vs.stop()
+        cv2.destroyAllWindows() 
