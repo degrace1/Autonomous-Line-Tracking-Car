@@ -9,24 +9,16 @@ THRESH = 5
 class CarState: 
 
     # Constructor
-    def __init__(self, id, dir, speed, ultra, other, x, y, r, carCopy = None):
-        if isinstance(carCopy, CarState): # Acts as a copy constructor
-            self.id = carCopy.getID
-            self.direction = carCopy.getDirection
-            self.speed = carCopy.getSpeed
-            self.ultrasonic = carCopy.getUltrasonic
-            self.location = carCopy.getLocation
-            self.other = carCopy.getOther
-        else: # Default constructor
-            self.id = id
-            self.direction = dir
-            self.speed = speed
-            self.ultrasonic = ultra
-            self.other = other
-            self.location = []
-            self.location.append(x)
-            self.location.append(y)
-            self.location.append(r)
+    def __init__(self, id, dir, speed, other, x, y, r):
+        self.id = id
+        self.direction = dir
+        self.speed = speed
+        self.ultrasonic = Ultrasonic.get_distance()
+        self.other = other
+        self.location = []
+        self.location.append(x)
+        self.location.append(y)
+        self.location.append(r)
 
     # all set methods for member variables 
     def setID(self, id):
@@ -35,8 +27,8 @@ class CarState:
         self.direction = dir
     def setSpeed(self,speed):
         self.speed = speed
-    def setUltrasonic(self,ultra):
-        self.ultrasonic = ultra
+    def setUltrasonic(self):
+        self.ultrasonic = Ultrasonic.get_distance()
     def setOther(self, other):
         self.other = other
     def addLocation(self,x,y,r):
@@ -79,6 +71,7 @@ class CarState:
         print("car id: " + str(self.id))
         print("direction: " + str(self.direction))
         print("speed: " + str(self.speed))
+        print("ultra: " + str(self.ultrasonic))
         print("other cars around: " + str(self.other))
         print("x: " + str(self.location[0]))
         print("y: " + str(self.location[1]))
@@ -91,6 +84,7 @@ class CarState:
         temp += "car id =" + str(self.id) + delim
         temp += "direction=" + str(self.direction) + delim
         temp += "speed=" + str(self.speed) + delim
+        temp += "ultra=" + str(self.ultrasonic) + delim
         temp += "other cars around=" + str(self.other) + delim
         temp += "x=" + str(self.location[0]) + delim
         temp += "y=" + str(self.location[1]) + delim
@@ -133,24 +127,6 @@ class CarState:
         error = self.updateState(stateString)
         if (error == ERRORVAL): return ERRORVAL
         return SUCCESS
-    # def update(self, address, port, id):
-    #     counter = 0
-    #     val = self.update_h(address, port, id)
-    #     while (val == FAILED and counter < THRESH):
-    #         val = self.update_h(address, port, id)
-    #         counter += 1
-    #     if (counter == THRESH):
-    #         return ERRORVAL
-    #     return SUCCESS
-    # def recv(self, address, port):
-    #     counter = 0
-    #     val = self.recv_h(address, port)
-    #     while (val == FAILED and counter < THRESH):
-    #         val = self.recv_h(address, port)
-    #         counter += 1
-    #     if (counter == THRESH):
-    #         return ERRORVAL
-    #     return SUCCESS
                 
 class Message:
 
@@ -229,6 +205,41 @@ class Message:
             if (len(pair) != 2): return "failed"
             if (pair[0] == 'state'):
                 return pair[1]
-        
+import time
+from Motor import *
+import RPi.GPIO as GPIO
+from servo import *
+from PCA9685 import PCA9685
+class Ultrasonic:
+    def __init__(self):
+        GPIO.setwarnings(False)
+        self.trigger_pin = 27
+        self.echo_pin = 22
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(self.trigger_pin,GPIO.OUT)
+        GPIO.setup(self.echo_pin,GPIO.IN)
+
+    def send_trigger_pulse(self):
+        GPIO.output(self.trigger_pin,True)
+        time.sleep(0.00015)
+        GPIO.output(self.trigger_pin,False)
+
+    def wait_for_echo(self,value,timeout):
+        count = timeout
+        while GPIO.input(self.echo_pin) != value and count>0:
+            count = count-1
+     
+    def get_distance(self):
+        distance_cm=[0,0,0,0,0]
+        for i in range(3):
+            self.send_trigger_pulse()
+            self.wait_for_echo(True,10000)
+            start = time.time()
+            self.wait_for_echo(False,10000)
+            finish = time.time()
+            pulse_len = finish-start
+            distance_cm[i] = (pulse_len * 34300) / 2
+        distance_cm=sorted(distance_cm)
+        return int(distance_cm[2])
 
 
