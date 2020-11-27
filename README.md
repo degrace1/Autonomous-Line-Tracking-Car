@@ -146,13 +146,10 @@ Instead of detecting the car iteslf, we put a colored ball on the top of each ca
 - Keep tracking of the colored ball and label it in the video.
 ----
 
-## Functions in object detection & tracking module
+## Class BallCapture
 
-### coloredBallTracking (vs, yellowLower , yellowUpper , minR , maxR) in BallCapture.py
-
-Before calling this function, videostream handler should be created first.
-
-- #### Input
+### BallCapture (self, yellowLower , yellowUpper , minR , maxR)
+during the initialization hte class will open a video stream and set up all parameters.
 
 Params | description 
 ------- | ----
@@ -163,6 +160,8 @@ minR| minimun ball size
 maxR| maximum ball size
 
 'yellowLower' , 'yellowUpper' , 'minR' , 'maxR' they all have default settings and we do not have to change them.
+
+### BallCapture.coloredBallTracking(): Capture the ball and return the location and radius 
 
 - #### Output
 This function will return a list [x,y,r]
@@ -176,13 +175,23 @@ r| radius of the ball
 When there is no ball detected it will return [0,0,0]
 
 
-### dVision(radius) in DistanceCamera.py
+### BallCapture.dVision(radius) 
 
 - #### Input
 radius of the ball.
 
 - #### Output
 predicted distance of the ball (cm).
+
+### BallCapture.captureOne()
+This function assembles the coloedballTracking() and dVision(radius)
+- #### Output
+This function will return a list [x,y,r,distance],. When therre is no ball detected, it will return [0,0,0,-1]. 
+
+
+### BallCapture.endAll()
+End the video stream and close all windows.
+
 
 ## Example for using detection & tracking module
 
@@ -195,25 +204,40 @@ import cv2
 import imutils
 
 
-#start video stream
-#notice: the video stream should be created out of the loop
-vs = VideoStream(src=0).start()
-#warm up
+#initilize a ball capture class
+c = BallCapture()
+
 time.sleep(2.0)
-
 for i in range(1000):
-    #calling coloredBallTracking()
-    result = coloredBallTracking(vs)
-    print(result)
-    # if it detects a ball and return a non zero radius
-    if result[2] != 0:
-        #compute distance of the ball
-        print(dVision(result[2]))
-
-#close the camera and all windows
-vs.stop()
-cv2.destroyAllWindows() 
+    #get the information of each frame
+    print(c.captureOne())
+#end the program
+c.endAll()
 ```
+
+you can also get the location of the ball and the distance seperately                                                           :
+
+```
+from BallCapture import *
+from ExampleCamera import *
+from DistanceCamera import *
+from imutils.video import VideoStream
+import cv2
+import imutils
+
+
+c = BallCapture()
+
+time.sleep(2.0)
+for i in range(1000):
+    #get the information of each frame
+    x,y,radius = c.captureOne()
+    distance = c.dVision(radius)
+    print(x,y,radius,distance)
+#end the program
+c.endAll()
+```
+
 
 ## How to test the camera
 ```
@@ -232,4 +256,3 @@ It will pop up a window showing the capture of the video. Put the mouse on this 
 
 ### Contact Info: 
 - Yubo Du : yubo.du@vanderbilt.edu
-
