@@ -59,8 +59,8 @@ class BallCapture:
                     cv2.circle(frame, center, 5, (0, 0, 255), -1)
 
             # show the frame to our screen
-            cv2.imshow("Frame", frame)
-            cv2.imshow("Mask", mask)
+            #cv2.imshow("Frame", frame)
+            #cv2.imshow("Mask", mask)
             key = cv2.waitKey(1) & 0xFF
             cv2.imwrite("frame//"+datetime.now().strftime("%d-%m-%Y-%H-%M-%S-%f")+'.jpg',frame)
             cv2.imwrite("mask//"+datetime.now().strftime("%d-%m-%Y-%H-%M-%S-%f")+'.jpg',mask)
@@ -83,7 +83,7 @@ class BallCapture:
             print(dis)
             return result[0],result[1],result[2],dis
         else:
-            return 0,0,0,-1
+            return 0,0,0,10000
         
     #close the camera and all windows
     def endAll(self):
