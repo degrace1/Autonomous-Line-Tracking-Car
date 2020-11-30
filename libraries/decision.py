@@ -50,7 +50,7 @@ class Decision:
     def mediumPriority(self):
         slow = Slow_Tracking()
         while True:
-            if False:#self.car.getUltrasonic() < 30: # Ultrasonic sensor detects an object that is close
+            if self.car.getUltrasonic() < 30: # Ultrasonic sensor detects an object that is close
                 print("ultrasonic finds an object near!","distance = ", self.car.getUltrasonic())
                 while self.car.getUltrasonic() < 50:
                     print("the object is still close (from ultrasonic)!","distance = ", self.car.getUltrasonic())
