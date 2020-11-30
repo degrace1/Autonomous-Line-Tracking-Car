@@ -64,7 +64,10 @@ class Decision:
                 while self.car.getUltrasonic() < 50:
                     print("the object is still close (from ultrasonic)!","distance = ", self.car.getUltrasonic())
                     frame = self.vs.read()
-                    cv2.putText(frame, text="the object is still close (from ultrasonic)!"+"distance = "+ self.car.getUltrasonic(), org=self.label,
+                    cv2.putText(frame, text="object is still close (from ultrasonic)!", org=self.label,
+                    fontFace= cv2.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(0,0,255),
+                    thickness=2, lineType=cv2.LINE_AA)
+                    cv2.putText(frame, text="distance = "+ str(self.car.getUltrasonic()), org=(self.label[0],self.label[1]+30),
                     fontFace= cv2.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(0,0,255),
                     thickness=2, lineType=cv2.LINE_AA)
                     cv2.imwrite("frame//"+datetime.now().strftime("%d-%m-%Y-%H-%M-%S-%f")+'.jpg',frame)
@@ -98,7 +101,10 @@ class Decision:
                 while self.car.getUltrasonic() < 50:
                     print("the object is still close (from ultrasonic)!","distance = ", self.car.getUltrasonic())
                     frame = self.vs.read()
-                    cv2.putText(frame, text="the object is still close (from ultrasonic)!"+"distance = "+ self.car.getUltrasonic(), org=self.label,
+                    cv2.putText(frame, text="object is still close (from ultrasonic)!", org=self.label,
+                    fontFace= cv2.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(0,0,255),
+                    thickness=2, lineType=cv2.LINE_AA)
+                    cv2.putText(frame, text="distance = "+ str(self.car.getUltrasonic()), org=(self.label[0],self.label[1]+30),
                     fontFace= cv2.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(0,0,255),
                     thickness=2, lineType=cv2.LINE_AA)
                     cv2.imwrite("frame//"+datetime.now().strftime("%d-%m-%Y-%H-%M-%S-%f")+'.jpg',frame)
