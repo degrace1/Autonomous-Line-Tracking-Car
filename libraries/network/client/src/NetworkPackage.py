@@ -13,7 +13,7 @@ class CarState:
         self.id = id
         self.direction = dir
         self.speed = speed
-        self.ultrasonic = Ultrasonic.get_distance()
+        self.ultrasonic = Ultrasonic().get_distance()
         self.other = other
         self.location = []
         self.location.append(x)
