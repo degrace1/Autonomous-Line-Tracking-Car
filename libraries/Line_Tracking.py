@@ -12,7 +12,7 @@ class Line_Tracking:
         GPIO.setup(self.IR03,GPIO.IN)
 
     def run(self):
-        while True:
+        if True:
             self.LMR=0x00
             if GPIO.input(self.IR01) == True:
                 self.LMR = (self.LMR | 4)

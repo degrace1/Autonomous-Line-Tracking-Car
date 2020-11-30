@@ -10,7 +10,9 @@ yellowLower = (26,43,46)
 yellowUpper = (34,255,255)
 
 #initilize a ball capture class
-c = BallCapture()
+
+vs =VideoStream(src=0).start()
+c = BallCapture(vs = vs)
 
 time.sleep(2.0)
 for i in range(1000):

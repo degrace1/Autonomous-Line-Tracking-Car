@@ -20,20 +20,21 @@ class BallCapture:
         self.yellowUpper = yellowUpper
         self.minR = minR
         self.maxR = maxR
+        self.frame = None
         
     def coloredBallTracking(self):
         x = 0
         y = 0
         radius = 0
         # here is a small loop because some times the algorithm may fail to capture the colored in a frame, let ot 
-        for i in range(3):
+        for i in range(1):
             # grab the current frame
-            frame = self.vs.read()
-            if frame is None:
+            self.frame = self.vs.read()
+            if self.frame is None:
                 break
             # denoise with filter and convert it to the HSV soace
-            frame = imutils.resize(frame, width=600)
-            blurred = cv2.GaussianBlur(frame, (11, 11), 0)
+            #self.frame = imutils.resize(self.frame, width=600)
+            blurred = cv2.GaussianBlur(self.frame, (11, 11), 0)
             hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)
 
             #mask teh yellow area and denoise with erode and dilation
@@ -55,21 +56,36 @@ class BallCapture:
 
                 # only proceed if the radius meets a minimum size
                 if radius > self.minR and radius < self.maxR:
-                    cv2.circle(frame, (int(x), int(y)), int(radius),(0, 255, 255), 2)
-                    cv2.circle(frame, center, 5, (0, 0, 255), -1)
+                    cv2.circle(self.frame, (int(x), int(y)), int(radius),(0, 255, 255), 2)
+                    cv2.circle(self.frame, center, 5, (0, 0, 255), -1)
 
             # show the frame to our screen
             #cv2.imshow("Frame", frame)
             #cv2.imshow("Mask", mask)
             key = cv2.waitKey(1) & 0xFF
-            cv2.imwrite("frame//"+datetime.now().strftime("%d-%m-%Y-%H-%M-%S-%f")+'.jpg',frame)
-            cv2.imwrite("mask//"+datetime.now().strftime("%d-%m-%Y-%H-%M-%S-%f")+'.jpg',mask)
+            if radius == 0:
+                cv2.putText(self.frame, text="nothing detected, keep running", org=(10,30),
+                    fontFace= cv2.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(0,0,255),
+                    thickness=2, lineType=cv2.LINE_AA)
+                
+                cv2.imwrite("frame//"+datetime.now().strftime("%d-%m-%Y-%H-%M-%S-%f")+'.jpg',self.frame)
+                cv2.imwrite("mask//"+datetime.now().strftime("%d-%m-%Y-%H-%M-%S-%f")+'.jpg',mask)
         return x,y,radius
     
     # compute the distance of a car given radius of the ball
     def dVision(self,radius):
         v = math.exp(-12.48963 * (1/radius))
         d = -8.974553 - (-2003.164/12.48963)*(1 - v)
+         
+        cv2.putText(self.frame, text="detected an object!", org=(10,30),
+                    fontFace= cv2.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(0,0,255),
+                    thickness=2, lineType=cv2.LINE_AA)
+        cv2.putText(self.frame, text="the distance is "+ str(int(d)) + "cm", org=(10,65),
+                    fontFace= cv2.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(0,0,255),
+                    thickness=2, lineType=cv2.LINE_AA)
+        
+        cv2.imwrite("frame//"+datetime.now().strftime("%d-%m-%Y-%H-%M-%S-%f")+'.jpg',self.frame)
+        
         return d
     
     # capture the ball and compute the distance 

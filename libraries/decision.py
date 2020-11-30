@@ -15,10 +15,13 @@ class Decision:
         self.time = time.time()
         self.vs =VideoStream(src=0).start()
         self.BallTrack = BallCapture(vs = self.vs) #init the object detection class
-        dir = 'frame'
+        
+        dir = 'frame' # create a dir to save the captured images
         if os.path.exists(dir):
             shutil.rmtree(dir)
         os.makedirs(dir)
+        
+        self.label = (10,30)# where to put the text in the image
         
     def run(self):
         try:
@@ -41,7 +44,13 @@ class Decision:
     # the line with no interruptions. 
     def highPriority(self):
         print("Priority of the car is high, just keep running!")
-        self.line.run()
+        while True:
+            frame = self.vs.read()
+            cv2.putText(frame, text='Priority of the car is high, just keep running!', org=self.label,
+            fontFace= cv2.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(0,0,255),
+            thickness=2, lineType=cv2.LINE_AA)
+            cv2.imwrite("frame//"+datetime.now().strftime("%d-%m-%Y-%H-%M-%S-%f")+'.jpg',frame)
+            self.line.run()
     
     # Car has ID 1 and has the second highest priority to the track. This car will
     # follow the line. If the ultrasonic sensor detects an object within 30 cm, the
@@ -50,11 +59,14 @@ class Decision:
     def mediumPriority(self):
         slow = Slow_Tracking()
         while True:
-            if self.car.getUltrasonic() < 30: # Ultrasonic sensor detects an object that is close
+            if False:#self.car.getUltrasonic() < 30: # Ultrasonic sensor detects an object that is close
                 print("ultrasonic finds an object near!","distance = ", self.car.getUltrasonic())
                 while self.car.getUltrasonic() < 50:
                     print("the object is still close (from ultrasonic)!","distance = ", self.car.getUltrasonic())
                     frame = self.vs.read()
+                    cv2.putText(frame, text="the object is still close (from ultrasonic)!"+"distance = "+ self.car.getUltrasonic(), org=self.label,
+                    fontFace= cv2.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(0,0,255),
+                    thickness=2, lineType=cv2.LINE_AA)
                     cv2.imwrite("frame//"+datetime.now().strftime("%d-%m-%Y-%H-%M-%S-%f")+'.jpg',frame)
                     slow.run()
             elif self.BallTrack.captureOne()[3] < 30 : # Camera detects an object that is close
@@ -68,8 +80,11 @@ class Decision:
                     # get distance from camera
             else: # Nothing in the way, run normally
                 frame = self.vs.read()
+                cv2.putText(frame, text="nothing detected, keep running", org=self.label,
+                    fontFace= cv2.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(0,0,255),
+                    thickness=2, lineType=cv2.LINE_AA)
                 cv2.imwrite("frame//"+datetime.now().strftime("%d-%m-%Y-%H-%M-%S-%f")+'.jpg',frame)
-                print("keep running!")
+                print("nothing find keep running!")
                 self.line.run()
                 
                 
@@ -83,6 +98,9 @@ class Decision:
                 while self.car.getUltrasonic() < 50:
                     print("the object is still close (from ultrasonic)!","distance = ", self.car.getUltrasonic())
                     frame = self.vs.read()
+                    cv2.putText(frame, text="the object is still close (from ultrasonic)!"+"distance = "+ self.car.getUltrasonic(), org=self.label,
+                    fontFace= cv2.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(0,0,255),
+                    thickness=2, lineType=cv2.LINE_AA)
                     cv2.imwrite("frame//"+datetime.now().strftime("%d-%m-%Y-%H-%M-%S-%f")+'.jpg',frame)
                     PWM.setMotorModel(0, 0, 0, 0) # Stop
             elif self.BallTrack.captureOne()[3] < 30 : # Camera detects that an object is close
@@ -93,6 +111,9 @@ class Decision:
             else: # Nothing in the way, run normally
                 print("nothing in the way, keep running!")
                 frame = self.vs.read()
+                cv2.putText(frame, text="nothing detected, keep running", org = self.label,
+                    fontFace= cv2.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(0,0,255),
+                    thickness=2, lineType=cv2.LINE_AA)
                 cv2.imwrite("frame//"+datetime.now().strftime("%d-%m-%Y-%H-%M-%S-%f")+'.jpg',frame)
                 self.line.run()
                 
