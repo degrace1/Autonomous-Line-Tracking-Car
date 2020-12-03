@@ -59,7 +59,7 @@ class Decision:
     def mediumPriority(self):
         slow = Slow_Tracking()
         while True:
-            if self.car.getUltrasonic() < 30: # Ultrasonic sensor detects an object that is close
+            if False:#self.car.getUltrasonic() < 30: # Ultrasonic sensor detects an object that is close
                 print("ultrasonic finds an object near!","distance = ", self.car.getUltrasonic())
                 while self.car.getUltrasonic() < 50:
                     print("the object is still close (from ultrasonic)!","distance = ", self.car.getUltrasonic())
@@ -98,11 +98,12 @@ class Decision:
     # until it's at least 50 cm away. If the camera de
     def lowPriority(self):
         while True:
+            print(self.car.getUltrasonic())
             if self.car.getUltrasonic() < 30: # Ultrasnoic sensor detects that an object is close
                 print("ultrasonic finds an object near!","distance = ", self.car.getUltrasonic())
                 while self.car.getUltrasonic() < 50:
                     PWM.setMotorModel(0, 0, 0, 0) # Stop
-                     print("the object is still close (from ultrasonic)!","distance = ", self.car.getUltrasonic())
+                    print("the object is still close (from ultrasonic)!","distance = ", self.car.getUltrasonic())
                     frame = self.vs.read()
                     cv2.putText(frame, text="object is still close (from ultrasonic)!", org=self.label,
                     fontFace= cv2.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(0,0,255),
@@ -112,12 +113,12 @@ class Decision:
                     thickness=2, lineType=cv2.LINE_AA)
                     cv2.imwrite("frame//"+datetime.now().strftime("%d-%m-%Y-%H-%M-%S-%f")+'.jpg',frame)
                     
-            elif self.BallTrack.captureOne()[3] < 30 : # Camera detects that an object is close
+            elif PWM.setMotorModel(0, 0, 0, 0) and self.BallTrack.captureOne()[3] < 30 : # Camera detects that an object is close
                 PWM.setMotorModel(0, 0, 0, 0)
-                print("camera finds an object near!")
-                while self.BallTrack.captureOne()[3] < 50 : #FIXME - distance to car must be less than 50 cm-ish
-                    print("the object is still close!")
-                    PWM.setMotorModel(0, 0, 0, 0)
+                #print("camera finds an object near!")
+                #while self.BallTrack.captureOne()[3] < 50 : #FIXME - distance to car must be less than 50 cm-ish
+                    #print("the object is still close!")
+                    #PWM.setMotorModel(0, 0, 0, 0)
                     
             else: # Nothing in the way, run normally
                 print("nothing in the way, keep running!")
