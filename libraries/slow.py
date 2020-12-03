@@ -24,18 +24,18 @@ class Slow_Tracking:
                 PWM.setMotorModel(600, 600, 600, 600)
                 self.direction = 1
             elif self.LMR == 4: # Right
-                PWM.setMotorModel(-1500, -1500, 2500, 2500)
+                PWM.setMotorModel(-1000, -1000, 2000, 2000)
                 self.direction = 4
             elif self.LMR == 6:
-		PWM.setMotorModel(-2000, -2000, 4000, 4000)
-		self.direction = 4 
-	    elif self.LMR == 1 or self.LMR == 3: # Left
-                PWM.setMotorModel(2500, 2500, -1500, -1500)
+                PWM.setMotorModel(-1000, -1000, 2000, 2000)
+                self.direction = 4 
+            elif self.LMR == 1: # Left
+                PWM.setMotorModel(2000, 2000, -1000, -1000)
                 self.direction = 3
             elif self.LMR == 3:
-		PWM.setMotorModel(4000, 4000, -2000, -2000)
-		self.direction = 3 
-	    elif self.LMR == 7: # Stop
+                PWM.setMotorModel(2000, 2000, -1000, -1000)
+                self.direction = 3 
+            elif self.LMR == 7: # Stop
                 PWM.setMotorModel(0,0,0,0)
                 self.direction = 0
           
@@ -49,7 +49,7 @@ if __name__ == '__main__':
     print('Slow line tracking is starting ... ')
 
     try:
-    	while True: 
-	    infrared.run()
+        while True: 
+            infrared.run()
     except KeyboardInterrupt:  # Stop car when 'Ctrl+C'
         PWM.setMotorModel(0, 0, 0, 0)
