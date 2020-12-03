@@ -59,7 +59,7 @@ class Decision:
     def mediumPriority(self):
         slow = Slow_Tracking()
         while True:
-            if False:#self.car.getUltrasonic() < 30: # Ultrasonic sensor detects an object that is close
+            if self.car.getUltrasonic() < 30: # Ultrasonic sensor detects an object that is close
                 print("ultrasonic finds an object near!","distance = ", self.car.getUltrasonic())
                 while self.car.getUltrasonic() < 50:
                     print("the object is still close (from ultrasonic)!","distance = ", self.car.getUltrasonic())
@@ -114,7 +114,7 @@ class Decision:
                     cv2.imwrite("frame//"+datetime.now().strftime("%d-%m-%Y-%H-%M-%S-%f")+'.jpg',frame)
                     
             elif PWM.setMotorModel(0, 0, 0, 0) and self.BallTrack.captureOne()[3] < 30 : # Camera detects that an object is close
-                PWM.setMotorModel(0, 0, 0, 0)
+                #PWM.setMotorModel(0, 0, 0, 0)
                 #print("camera finds an object near!")
                 #while self.BallTrack.captureOne()[3] < 50 : #FIXME - distance to car must be less than 50 cm-ish
                     #print("the object is still close!")
