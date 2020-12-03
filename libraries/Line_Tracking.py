@@ -28,7 +28,7 @@ class Line_Tracking:
                 self.direction = 4
             elif self.LMR == 6: # Faster right
                 PWM.setMotorModel(-2000, -2000, 4000, 4000)
-                seld.direction = 4
+                self.direction = 4
             elif self.LMR == 1: # Left
                 PWM.setMotorModel(2500, 2500, -1500, -1500)
                 self.direction = 3

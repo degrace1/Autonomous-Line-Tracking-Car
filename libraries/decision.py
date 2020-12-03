@@ -98,10 +98,12 @@ class Decision:
     # until it's at least 50 cm away. If the camera de
     def lowPriority(self):
         while True:
+            self.car.setUltrasonic() 
             print(self.car.getUltrasonic())
-            if self.car.getUltrasonic() < 30: # Ultrasnoic sensor detects that an object is close
+            if False:#self.car.getUltrasonic() < 20: # Ultrasnoic sensor detects that an object is close
                 print("ultrasonic finds an object near!","distance = ", self.car.getUltrasonic())
-                while self.car.getUltrasonic() < 50:
+                while self.car.getUltrasonic() < 30:
+                    self.car.setUltrasonic() 
                     PWM.setMotorModel(0, 0, 0, 0) # Stop
                     print("the object is still close (from ultrasonic)!","distance = ", self.car.getUltrasonic())
                     frame = self.vs.read()
@@ -113,17 +115,19 @@ class Decision:
                     thickness=2, lineType=cv2.LINE_AA)
                     cv2.imwrite("frame//"+datetime.now().strftime("%d-%m-%Y-%H-%M-%S-%f")+'.jpg',frame)
                     
-            elif False:#self.BallTrack.captureOne()[3] < 30 : # Camera detects that an object is close
-                1
-                #PWM.setMotorModel(0, 0, 0, 0) and 
-                #PWM.setMotorModel(0, 0, 0, 0)
+
+            
+
+            elif self.BallTrack.captureOne()[3] < 30: # Camera detects that an object is close
+                
+                PWM.setMotorModel(0, 0, 0, 0)
                 #print("camera finds an object near!")
                 #while self.BallTrack.captureOne()[3] < 50 : #FIXME - distance to car must be less than 50 cm-ish
                     #print("the object is still close!")
                     #PWM.setMotorModel(0, 0, 0, 0)
                     
             else: # Nothing in the way, run normally
-                print("nothing in the way, keep running!")
+                print("nothing in the way, keep running! branch 3")
                 frame = self.vs.read()
                 cv2.putText(frame, text="nothing detected, keep running", org = self.label,
                     fontFace= cv2.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(0,0,255),

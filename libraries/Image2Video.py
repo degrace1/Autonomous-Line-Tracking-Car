@@ -2,7 +2,9 @@ import cv2
 import numpy as np
 import os
 from datetime import datetime,date,timedelta
+import sys
 
+fps = 8
 img_array = []
 names = os.listdir('./frame')
 times =sorted([datetime.strptime(dt.split('.')[0], "%d-%m-%Y-%H-%M-%S-%f") for dt in names])
@@ -19,7 +21,7 @@ for filename in ImageNames:
     img_array.append(img)
 
 
-out = cv2.VideoWriter('sample.avi',cv2.VideoWriter_fourcc(*'DIVX'), 15, size)
+out = cv2.VideoWriter('sample.mp4',cv2.VideoWriter_fourcc(*'mp4v'), fps, size)
  
 for i in range(len(img_array)):
     out.write(img_array[i])
