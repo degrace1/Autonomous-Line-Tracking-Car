@@ -13,7 +13,8 @@ class CarState:
         self.id = id
         self.direction = dir
         self.speed = speed
-        self.ultrasonic = Ultrasonic().get_distance()
+        self.ultrasonic = Ultrasonic()
+        self.distance = self.ultrasonic.get_distance()
         self.other = other
         self.location = []
         self.location.append(x)
@@ -28,7 +29,7 @@ class CarState:
     def setSpeed(self,speed):
         self.speed = speed
     def setUltrasonic(self):
-        self.ultrasonic = Ultrasonic.get_distance()
+        self.distance = self.ultrasonic.get_distance()
     def setOther(self, other):
         self.other = other
     def addLocation(self,x,y,r):
@@ -47,7 +48,7 @@ class CarState:
     def getSpeed(self):
         return self.speed
     def getUltrasonic(self):
-        return self.ultrasonic
+        return self.distance
     def getOther(self):
         return self.other
     def getLocation(self):
