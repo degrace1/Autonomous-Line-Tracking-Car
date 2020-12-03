@@ -98,10 +98,12 @@ class Decision:
     # until it's at least 50 cm away. If the camera de
     def lowPriority(self):
         while True:
+            self.car.setUltrasonic() 
             print(self.car.getUltrasonic())
-            if self.car.getUltrasonic() < 30: # Ultrasnoic sensor detects that an object is close
+            if self.car.getUltrasonic() < 20: # Ultrasnoic sensor detects that an object is close
                 print("ultrasonic finds an object near!","distance = ", self.car.getUltrasonic())
-                while self.car.getUltrasonic() < 50:
+                while self.car.getUltrasonic() < 30:
+                    self.car.setUltrasonic() 
                     PWM.setMotorModel(0, 0, 0, 0) # Stop
                     print("the object is still close (from ultrasonic)!","distance = ", self.car.getUltrasonic())
                     frame = self.vs.read()
@@ -113,7 +115,7 @@ class Decision:
                     thickness=2, lineType=cv2.LINE_AA)
                     cv2.imwrite("frame//"+datetime.now().strftime("%d-%m-%Y-%H-%M-%S-%f")+'.jpg',frame)
                     
-            elif PWM.setMotorModel(0, 0, 0, 0) and self.BallTrack.captureOne()[3] < 30 : # Camera detects that an object is close
+#            elif False: # Camera detects that an object is close
                 #PWM.setMotorModel(0, 0, 0, 0)
                 #print("camera finds an object near!")
                 #while self.BallTrack.captureOne()[3] < 50 : #FIXME - distance to car must be less than 50 cm-ish
@@ -132,7 +134,7 @@ class Decision:
 
 
 ## TEST CODE
-id = 1 # Car ID changes its priority
+id = 2 # Car ID changes its priority
 decision = Decision(id)
 if __name__ == '__main__':
     print('Decision algorithm is starting...')
