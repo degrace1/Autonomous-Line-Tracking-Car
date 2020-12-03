@@ -102,7 +102,7 @@ class Decision:
                 print("ultrasonic finds an object near!","distance = ", self.car.getUltrasonic())
                 while self.car.getUltrasonic() < 50:
                     PWM.setMotorModel(0, 0, 0, 0) # Stop
-                     print("the object is still close (from ultrasonic)!","distance = ", self.car.getUltrasonic())
+                    print("the object is still close (from ultrasonic)!","distance = ", self.car.getUltrasonic())
                     frame = self.vs.read()
                     cv2.putText(frame, text="object is still close (from ultrasonic)!", org=self.label,
                     fontFace= cv2.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(0,0,255),
