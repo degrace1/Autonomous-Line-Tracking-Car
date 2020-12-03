@@ -113,7 +113,9 @@ class Decision:
                     thickness=2, lineType=cv2.LINE_AA)
                     cv2.imwrite("frame//"+datetime.now().strftime("%d-%m-%Y-%H-%M-%S-%f")+'.jpg',frame)
                     
-            elif PWM.setMotorModel(0, 0, 0, 0) and self.BallTrack.captureOne()[3] < 30 : # Camera detects that an object is close
+            elif False:#self.BallTrack.captureOne()[3] < 30 : # Camera detects that an object is close
+                1
+                #PWM.setMotorModel(0, 0, 0, 0) and 
                 #PWM.setMotorModel(0, 0, 0, 0)
                 #print("camera finds an object near!")
                 #while self.BallTrack.captureOne()[3] < 50 : #FIXME - distance to car must be less than 50 cm-ish
@@ -132,7 +134,7 @@ class Decision:
 
 
 ## TEST CODE
-id = 1 # Car ID changes its priority
+id = 2 # Car ID changes its priority
 decision = Decision(id)
 if __name__ == '__main__':
     print('Decision algorithm is starting...')
