@@ -100,7 +100,7 @@ class Decision:
         while True:
             self.car.setUltrasonic() 
             print(self.car.getUltrasonic())
-            if False:#self.car.getUltrasonic() < 20: # Ultrasnoic sensor detects that an object is close
+            if self.car.getUltrasonic() < 20: # Ultrasnoic sensor detects that an object is close
                 print("ultrasonic finds an object near!","distance = ", self.car.getUltrasonic())
                 while self.car.getUltrasonic() < 30:
                     self.car.setUltrasonic() 
@@ -118,9 +118,9 @@ class Decision:
 
             
 
-            elif self.BallTrack.captureOne()[3] < 30: # Camera detects that an object is close
+            #elif self.BallTrack.captureOne()[3] < 30: # Camera detects that an object is close
                 
-                PWM.setMotorModel(0, 0, 0, 0)
+                #PWM.setMotorModel(0, 0, 0, 0)
                 #print("camera finds an object near!")
                 #while self.BallTrack.captureOne()[3] < 50 : #FIXME - distance to car must be less than 50 cm-ish
                     #print("the object is still close!")
