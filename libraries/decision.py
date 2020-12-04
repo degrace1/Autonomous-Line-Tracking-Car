@@ -103,9 +103,9 @@ class Decision:
         while True:
             self.car.setUltrasonic() 
             print(self.car.getUltrasonic())
-            if self.car.getUltrasonic() < 20: # Ultrasnoic sensor detects that an object is close
+            if self.car.getUltrasonic() < 30: # Ultrasnoic sensor detects that an object is close
                 print("ultrasonic finds an object near!","distance = ", self.car.getUltrasonic())
-                while self.car.getUltrasonic() < 30:
+                while self.car.getUltrasonic() < 40:
                     self.car.setUltrasonic() 
                     PWM.setMotorModel(0, 0, 0, 0) # Stop
                     print("There is an object ", self.car.getUltrasonic(), " cm away.")
