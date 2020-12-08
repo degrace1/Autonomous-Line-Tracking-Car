@@ -55,7 +55,7 @@ class CarState:
         return self.location
 
     # serialize state to string
-    def toString(self):
+    def __str__(self):
         temp = ""
         delim = ","
         temp += str(self.id) + delim
@@ -108,7 +108,7 @@ class CarState:
     
     # send state for this obj to server
     def send(self, address, port):
-        message = self.toString()
+        message = str(self)
         Message.sendMessage(address, port, self.id, message)
    
     # get state string from server for this obj

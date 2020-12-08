@@ -1,3 +1,7 @@
+# Decision
+# This class determines how a car will run and avoid obstacles in its
+# path based on its priority level.
+
 import time
 from Motor import *
 from Line_Tracking import *
@@ -8,21 +12,26 @@ import cv2
 import os
 import shutil
 
+
 class Decision:
+    # Constructor
     def __init__(self, id):
         self.car = CarState(id,0,0,0,0,0,0) # Initialize car state object
         self.line = Line_Tracking() # Car line follower algorithm
         self.time = time.time()
-        self.vs =VideoStream(src=0).start()
-        self.BallTrack = BallCapture(vs = self.vs) #init the object detection class
+        self.vs = VideoStream(src=0).start()
+        self.BallTrack = BallCapture(vs = self.vs) # Initialize object detection class
         
-        dir = 'frame' # create a dir to save the captured images
+        dir = 'frame' # Directory for captured images
         if os.path.exists(dir):
             shutil.rmtree(dir)
         os.makedirs(dir)
         
-        self.label = (10,30)# where to put the text in the image
-        
+        self.label = (10,30) # Text label for images
+
+    # Run
+    # This method calls the appropiate method based on the priority level of the car. It
+    # will continue running until control C is pressed.
     def run(self):
         try:
             if self.car.getID() == 0: # Car only traces line
@@ -39,7 +48,8 @@ class Decision:
                 
         except KeyboardInterrupt: 
             PWM.setMotorModel(0, 0, 0, 0) # Car stops once control C pressed
-            
+
+    # High Priority
     # Car has ID 0 and has the highest priority to the track. This car will follow
     # the line with no interruptions. 
     def highPriority(self):
@@ -51,7 +61,8 @@ class Decision:
             thickness=2, lineType=cv2.LINE_AA)
             cv2.imwrite("frame//"+datetime.now().strftime("%d-%m-%Y-%H-%M-%S-%f")+'.jpg',frame)
             self.line.run()
-    
+
+    # Medium Priority
     # Car has ID 1 and has the second highest priority to the track. This car will
     # follow the line. If the ultrasonic sensor detects an object within 30 cm, the
     # car will slow down until the car is at least 50 cm away. If the camera detects
@@ -61,7 +72,9 @@ class Decision:
         while True:
             if self.car.getUltrasonic() < 20: # Ultrasonic sensor detects an object that is close
                 print("There is an object within 20 cm of the car, slow down!")
-                while self.car.getUltrasonic() < 25:
+                start = time.time()
+                update = time.time()
+                while self.car.getUltrasonic() < 25  and update - start < 5:
                     print("There is an object ", self.car.getUltrasonic(), " cm away from the car.")
                     frame = self.vs.read()
                     cv2.putText(frame, text="There is an object close by.", org=self.label,
@@ -73,17 +86,16 @@ class Decision:
                     cv2.imwrite("frame//"+datetime.now().strftime("%d-%m-%Y-%H-%M-%S-%f")+'.jpg',frame)
                     slow.run()
                     
-            elif self.BallTrack.captureOne()[3] < 30 : # Camera detects an object that is close
+            elif self.BallTrack.captureOne()[3] < 20 : # Camera detects an object that is close
                 slow = Slow_Tracking()
                 PWM.setMotorModel(0, 0, 0, 0)
                 print("There is an object within 30 cm of the car, slow down!")
                 start = time.time()
                 update = time.time()
-                while (self.BallTrack.captureOne()[3] < 30 ) or update - start < 5: # While camera sees something to the side or 5 s has not elapsed
+                while (self.BallTrack.captureOne()[3] < 25 ) and update - start < 5: # While camera sees something to the side or 5 s has not elapsed
                     print("There is an object ", self.BallTrack.captureOne()[3], " cm away from the car.")
                     PWM.setMotorModel(0, 0, 0, 0)
                     update = time.time()
-                    slow.run()
                     
             else: # Nothing in the way, run normally
                 frame = self.vs.read()
@@ -93,9 +105,8 @@ class Decision:
                 cv2.imwrite("frame//"+datetime.now().strftime("%d-%m-%Y-%H-%M-%S-%f")+'.jpg',frame)
                 print("nothing find keep running!")
                 self.line.run()
-                
-                
-                
+
+    # Low Priority
     # Car has ID 2 and has the third highest priority to the track. This car will follow
     # the line. If the ultrasonic sensor detects an object within 30 cm, the car will stop
     # until it's at least 50 cm away. If the camera de
@@ -121,7 +132,7 @@ class Decision:
             elif self.BallTrack.captureOne()[3] < 30: # Camera detects that an object is close
                 PWM.setMotorModel(0, 0, 0, 0)
                 print("camera finds an object near!")
-                while self.BallTrack.captureOne()[3] < 50 : #FIXME - distance to car must be less than 50 cm-ish
+                while self.BallTrack.captureOne()[3] < 40:
                     print("the object is still close!")
                     PWM.setMotorModel(0, 0, 0, 0)
                     
@@ -133,10 +144,9 @@ class Decision:
                     thickness=2, lineType=cv2.LINE_AA)
                 cv2.imwrite("frame//"+datetime.now().strftime("%d-%m-%Y-%H-%M-%S-%f")+'.jpg',frame)
                 self.line.run()
-                
 
 
-## TEST CODE
+# TEST CODE
 id = 2 # Car ID changes its priority
 decision = Decision(id)
 if __name__ == '__main__':
