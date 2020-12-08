@@ -40,7 +40,7 @@ class Line_Tracking:
                 self.direction = 0
 
         # Direction of car: 0 is stopped, 1 is forward, 2 is backward, 3 is left, 4 is right
-        def get_direction():
+        def getDirection():
             return self.direction
 
 

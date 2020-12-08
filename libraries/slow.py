@@ -40,14 +40,13 @@ class Slow_Tracking:
                 self.direction = 0
           
     # Direction of car: 0 is stopped, 1 is forward, 2 is backward, 3 is left, 4 is right
-    def get_direction(self):
+    def getDirection(self):
         return self.direction
 
 infrared = Slow_Tracking()
 # Main program logic follows:
 if __name__ == '__main__':
     print('Slow line tracking is starting ... ')
-
     try:
         while True: 
             infrared.run()
