@@ -88,6 +88,7 @@ class Decision:
                 start = time.time()
                 update = time.time()
                 while self.car.getUltrasonic() < 25  and update - start < 5:
+                    update = time.time()
                     print("There is an object ", self.car.getUltrasonic(), " cm away from the car.")
                     frame = self.vs.read()
                     cv2.putText(frame, text="There is an object close by.", org=self.label,
@@ -135,7 +136,10 @@ class Decision:
             print(self.car.getUltrasonic())
             if self.car.getUltrasonic() < 30: # Ultrasnoic sensor detects that an object is close
                 print("ultrasonic finds an object near!","distance = ", self.car.getUltrasonic())
-                while self.car.getUltrasonic() < 40:
+                start = time.time()
+                update = time.time()
+                while self.car.getUltrasonic() < 40 and update - start <= 5:
+                    update = time.time()
                     self.car.setUltrasonic() 
                     PWM.setMotorModel(0, 0, 0, 0) # Stop
                     print("There is an object ", self.car.getUltrasonic(), " cm away.")
