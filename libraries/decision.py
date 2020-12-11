@@ -12,6 +12,11 @@ import cv2
 import os
 import shutil
 
+# replace address string with public ip address of AWS instance
+address = '127.0.0.1'
+
+# always use this port
+port = 6789
 
 class Decision:
     car: object
@@ -38,7 +43,7 @@ class Decision:
     def update(self):
         self.car.setDirection(self.direction)
         self.car.setSpeed(self.speed)
-        self.car.updateState(str(self.car))
+        self.car.send(address, port)
 
     # Run
     # This method calls the appropiate method based on the priority level of the car. It
