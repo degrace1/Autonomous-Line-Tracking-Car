@@ -173,14 +173,3 @@ class Decision:
                 self.line.run()
                 self.speed = 2
                 self.direction = self.line.getDirection()
-
-
-# TEST CODE
-id = 2 # Car ID changes its priority
-decision = Decision(id)
-if __name__ == '__main__':
-    print('Decision algorithm is starting...')
-    try:
-        decision.run()
-    except KeyboardInterrupt:  # Stop car when 'Ctrl+C'
-        PWM.setMotorModel(0, 0, 0, 0)
