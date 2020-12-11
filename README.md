@@ -1,14 +1,17 @@
 # Autonomous-Line-Tracking-Car
 ### Team: 
-Alex Feeley, Grace DePietro, Yoni Xiong, Yubo Du
-### Goals: 
-[]
-### Instructions: 
-[]
-### Operation Specs: 
-[]
-### Libraries: 
-[]
+Grace DePietro, Yubo Du, Alex Feeley, and Yoni Xiong
+
+### Goal: 
+Design and implement an autonomous car system using the Raspberry Pi 4!
+
+### Instructions:
+In the "Documentation" folder:  
+- User Manual PDF details how to setup and run the system
+- Technical Manual PDF explains how each system module functions
+
+### Additional Information: 
+Below are developer guides on using the network communication and object detection packages
 
 ----
 # Network Protocol for Autonomous Car
@@ -53,7 +56,7 @@ port = 6789
 carStateEx.send(address,port)
 ```
 ### Reading:
-The decision algorithm will read parameters of carState to make a decision. The decision algorithm should call a function to poll the server for the most updated state of the a car by ID before starting the decision making process (if async in a thread but not if linear in a function). 
+The decision algorithm will read parameters of carState to make a decision. The decision algorithm should call a function to poll the server for the most updated state of a car by ID before starting the decision making process (if async in a thread but not if linear in a function). 
 ```
 // loads temp with the state of CAR_ID from the server
 tempCarObj = CarState(0, 0, 0, 0, 0, 0, 0, 0) 
@@ -82,7 +85,7 @@ z: 11.0
 carStateEx.logInLine()
 /*
 Log you will see printed to system console........ 
-car id =10,direction=4,speed=3.14,other cars around=1,x=9.0,y=10.0,z=11.0
+car id =10, direction=4,speed=3.14,other cars around=1,x=9.0,y=10.0,z=11.0
 */
 ```
 
@@ -109,12 +112,12 @@ car id =10,direction=4,speed=3.14,other cars around=1,x=9.0,y=10.0,z=11.0
 - double **getUltrasonic**()
 - int **getOtherCarsCount**()
 - List<double> **getCarsNearby**Location()
-- String **serializeState**() //generate serial string of all state params (comma seperated)
+- String **serializeState**() //generate serial string of all state params (comma separated)
 - **updateState**(self, String serialState) // update member var using serial response string from server
 - **syntax varies depending on Python or Java
 ### Server Functionality for FYI: 
 - carState objects are stored for each registered CAR_ID.
-- When a update is sent to the server, the appropriate car's object is updated.
+- When an update is sent to the server, the appropriate car's object is updated.
 - When a request is sent to the server, the appropriate car's object parameters are serialized and sent to the client.
 
 ----
@@ -149,7 +152,7 @@ Instead of detecting the car iteslf, we put a colored ball on the top of each ca
 ## Class BallCapture
 
 ### BallCapture (self, yellowLower , yellowUpper , minR , maxR)
-during the initialization hte class will open a video stream and set up all parameters.
+during the initialization the class will open a video stream and set up all parameters.
 
 Params | description 
 ------- | ----
@@ -215,7 +218,7 @@ for i in range(1000):
 c.endAll()
 ```
 
-you can also get the location of the ball and the distance seperately                                                           :
+you can also get the location of the ball and the distance separately                                                           :
 
 ```
 from BallCapture import *
@@ -241,8 +244,7 @@ c.endAll()
 
 ## How to test the camera
 ```
-python camera.py
-
+python3 camera.py
 ```
 It will pop up a window showing the capture of the video. Put the mouse on this window, press button 'q' in the keyboard, then the video will be terminated. The output video will be saved in the file named 'output.avi' in current folder.
 
@@ -250,7 +252,7 @@ It will pop up a window showing the capture of the video. Put the mouse on this 
 
 ## Some advices for using this module
 
-- It performs well when the background is simple, without any yellow color components. A good brightness with neither too strong nor too weak lightness is also prefered. 
+- It performs well when the background is simple, without any yellow color components. A good brightness with neither too strong nor too weak lightness is also preferred. 
 - It may fail to detect the ball in some frames but will work in most cases.
 - It is very sensitive to the light and background. After moving on to a new background, we should adjust the parameters again.
 
