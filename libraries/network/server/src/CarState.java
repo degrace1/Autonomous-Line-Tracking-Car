@@ -1,9 +1,9 @@
-import java.util.ArrayList;
-import java.util.List;
-
 // Name: Yoni Xiong
 // Assignment: Final Project
 // Date: 11/14/2020
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CarState {
     private int CAR_ID; 

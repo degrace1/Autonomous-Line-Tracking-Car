@@ -18,18 +18,20 @@ class Ultrasonic:
 
     def wait_for_echo(self,value,timeout): #waits for wave to come bounce back
         count = timeout
-        while GPIO.input(self.echo_pin) != value and count>0: #change count to understand distance
+        #change count to understand distance
+        while GPIO.input(self.echo_pin) != value and count>0: 
             count = count-1
      
-    def get_distance(self):                         #calculate distance
-        distance_cm=[0,0,0,0,0]                     #initial distance 0
-        for i in range(3):                          #loop 3x
-            self.send_trigger_pulse()               #send a trigger pulse to start wave
-            self.wait_for_echo(True,10000)          #wait for echo to come back
-            start = time.time()                     #start timer
-            self.wait_for_echo(False,10000)         #wait for echo
-            finish = time.time()                    #finish timer
-            pulse_len = finish-start                #calc total time from lengths
-            distance_cm[i] = (pulse_len * 34300) / 2 #multiply by usonic speed and divide by two (for there and back
-        distance_cm=sorted(distance_cm)             #sort
-        return int(distance_cm[2])                  #return distance
+    def get_distance(self):        #calculate distance
+        distance_cm=[0,0,0,0,0]    #initial distance 0
+        for i in range(3):         #loop 3x
+            self.send_trigger_pulse()       #send a trigger pulse to start wave
+            self.wait_for_echo(True,10000)  #wait for echo to come back
+            start = time.time()             #start timer
+            self.wait_for_echo(False,10000) #wait for echo
+            finish = time.time()            #finish timer
+            pulse_len = finish-start        #calc total time from lengths
+            # multiply by usonic speed and divide by two (for there and back
+            distance_cm[i] = (pulse_len * 34300) / 2 
+        distance_cm=sorted(distance_cm)     #sort
+        return int(distance_cm[2])          #return distance
