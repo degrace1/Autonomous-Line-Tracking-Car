@@ -19,7 +19,7 @@ public class ClientTest2 {
         BufferedReader fromServer = new BufferedReader(new InputStreamReader(socket.getInputStream())); 
 
         // create test values 
-        int CAR_ID = 13; 
+        int CAR_ID = 0; 
         int direction = 4; 
         double speed = 3.14; 
         double ultrasonic = 6.9; 
@@ -50,15 +50,19 @@ public class ClientTest2 {
         send.putParam(Message.STATE_KEY, testCar.toString()); 
         toServer.writeBytes(send.toString()+ '\n'); 
         System.out.println("Sent to server: " + send.toString()); 
-        Thread.sleep(10000);
+        // Thread.sleep(10000);
+        String responseFromServer = fromServer.readLine();  
+        Message recvState = new Message(responseFromServer);
+        System.out.println("ack: " + recvState.toString()); 
+
 
         // requesst state from server 
         Message req = new Message(); 
         req.putParam(Message.TYPE_KEY, Message.REQ_STATE_COMMAND);
         toServer.writeBytes(req.toString()+ '\n'); 
-        String responseFromServer = fromServer.readLine();  
-        Message recvState = new Message(responseFromServer);
-        System.out.println("Recieved State from server: " + recvState.toString()); 
+        responseFromServer = fromServer.readLine();  
+        Message recvState2 = new Message(responseFromServer);
+        System.out.println("Recieved State from server: " + recvState2.toString()); 
 
         // log out
         Message logout = new Message(); 

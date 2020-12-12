@@ -1,3 +1,7 @@
+// Name: Yoni Xiong
+// Assignment: Final Project
+// Date: 11/14/2020
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -67,6 +71,7 @@ public class Message {
         return stringTemp.toString(); 
     }
 
+    // extract parameters from command messages
     private HashMap<String, String> extractParams (String serialMessage){
 
         // make empty hashmap to hold param key, value pairs in serial message

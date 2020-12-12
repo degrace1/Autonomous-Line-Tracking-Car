@@ -15,6 +15,7 @@ public class State {
     private List<Double> locations;
     private static String DELIM = ","; 
 
+    // default constructor
     public State(){
         this.CAR_ID = 0;
         this.direction = 0;
@@ -23,6 +24,8 @@ public class State {
         this.otherCarsCount = 0;
         this.locations = new ArrayList<Double>(); 
     }
+
+    // alternate constructor
     public State(int CAR_ID, int direction, double speed, double ultra, int other, List<Double> locations){
         setCAR_ID(CAR_ID);
         setDirection(direction);
@@ -32,6 +35,7 @@ public class State {
         setLocations(locations);
     }
 
+    // serialize the state into a comma separated string
     public String toString(){
         StringBuilder stringTemp = new StringBuilder(); 
         String delim = DELIM; 
@@ -51,6 +55,7 @@ public class State {
         return stringTemp.toString(); 
     }
 
+    // update member variables using serial state string 
     public void updateState(String serialString){
         String[] params = serialString.split(","); 
         this.CAR_ID = Integer.parseInt(params[0]);
@@ -64,7 +69,7 @@ public class State {
         }
     }
 
-    // get x,y,z form
+    // get x,y,z form for location
     public String locationToString(){
         StringBuilder stringTemp = new StringBuilder(); 
         String delim = ""; 
@@ -76,40 +81,62 @@ public class State {
         return stringTemp.toString(); 
     }
 
+    // set the car identifier
     public void setCAR_ID(int cAR_ID) {
         CAR_ID = cAR_ID;
     }
+
+    // set the car direction
     public void setDirection(int direction) {
         this.direction = direction;
     }
+
+    // set the car speed
     public void setSpeed(double speed) {
         this.speed = speed;
     }
+
+    // set the car ultrasonic distance detected
     public void setUltrasonic(double ultrasonic) {
         this.ultrasonic = ultrasonic;
     }
+
+    // set the nearby car count
     public void setOtherCarsCount(int otherCarsCount) {
         this.otherCarsCount = otherCarsCount;
     }
+
+    // set the car nearby locations
     public void setLocations(List<Double> locations) {
         this.locations = locations;
     }
+
+    // get car id
     public int getCAR_ID() {
         return CAR_ID;
     }
+
+    // get car direction
     public int getDirection() {
         return direction;
     }
+
+    // get car speed
     public double getSpeed() {
         return speed;
     }
+
+    // get car ultrasonic value
     public double getUltrasonic() {
         return ultrasonic;
     }
+
+    // get count of other cars nearby
     public int getOtherCarsCount() {
         return otherCarsCount;
     }
-    // (x,y,z)
+
+    // get (x,y,z) array form of location
     public List<Double> getLocations() {
         return locations;
     }

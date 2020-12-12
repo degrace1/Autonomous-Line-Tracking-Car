@@ -1,3 +1,7 @@
+// Name: Yoni Xiong
+// Assignment: Final Project
+// Date: 11/14/2020
+
 import java.io.BufferedReader; 
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
@@ -7,7 +11,7 @@ import java.net.Socket;
 class ClientHandler implements Runnable { 
     private Socket myClientSocket;              // client socket
     private MasterState myCars;                 // cars
-    private boolean killThrd; 
+    private boolean killThrd;                   // thread life boolean
 	
 	// constructor 
     public ClientHandler(Socket myClientSocket, MasterState myStates) {
@@ -17,6 +21,7 @@ class ClientHandler implements Runnable {
         this.killThrd = false;
 	} 
 
+    // run function to handle requests
 	@Override
 	public void run() {
         // run until token is invalid 
@@ -46,6 +51,7 @@ class ClientHandler implements Runnable {
 		}  
     }
     
+    // process the requests
     public void processClientRequest(BufferedReader fromClient, DataOutputStream toClient) throws IOException {
         // init car_id for session
         String id = ""; 
@@ -65,21 +71,19 @@ class ClientHandler implements Runnable {
             // create message obj
             Message clientMessage = new Message(message); 
 
-            // log client message 
-            System.out.println("Recieved message: " + clientMessage.toString());
-
             // get type_key value
             String value = clientMessage.getParam(Message.TYPE_KEY); 
 
-            // handle client commands 
+            // handle different client commands 
             switch (value){
                 case (Message.LOGIN_COMMAND):
-                    // get car_id
+                    // get car_id from message
                     id = clientMessage.getParam(Message.ID_KEY); 
                     break; 
                 case (Message.SEND_STATE_COMMAND):
+                    // extact serialized state
                     String state = clientMessage.getParam(Message.STATE_KEY); 
-                    // add state
+                    // add state to shared map
                     synchronized(myCars){
                         this.myCars.add(Integer.parseInt(id), state);
                     }
@@ -87,9 +91,9 @@ class ClientHandler implements Runnable {
                     Message ack = new Message(); 
                     ack.putParam(Message.TYPE_KEY, Message.SEND_ACK); 
                     toClient.writeBytes(ack.toString() +'\n');
-                    System.out.println("Sent Ack to Client: "+ id);
                     break; 
                 case (Message.REQ_STATE_COMMAND):
+                    // prepare response message to client
                     Message stateToSend = new Message(); 
                     stateToSend.putParam(Message.TYPE_KEY, Message.SEND_STATE_COMMAND); 
 
@@ -107,10 +111,9 @@ class ClientHandler implements Runnable {
                     }
                     // send state to client
                     toClient.writeBytes(stateToSend.toString() +'\n');
-                    System.out.println("Sent: " + stateToSend.toString());
                     break; 
                 case (Message.LOGOUT_COMMAND):
-                    //quit program
+                    // quit program and kill thread
                     killThrd = true; 
                     quit = true; 
                     break; 

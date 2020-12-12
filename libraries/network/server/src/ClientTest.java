@@ -1,3 +1,7 @@
+// Name: Yoni Xiong
+// Assignment: Final Project
+// Date: 11/14/2020
+
 import java.io.BufferedReader; 
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
@@ -6,8 +10,8 @@ import java.net.Socket;
 
 public class ClientTest {
     // host address
-    //private static final String HOST_ADDRESS = "127.0.0.1";  
-    private static final String HOST_ADDRESS = "100.26.217.199";  
+    private static final String HOST_ADDRESS = "127.0.0.1";  
+    // private static final String HOST_ADDRESS = "100.26.217.199";  
 
     // port              
     private static final int PORT = 6789; 
@@ -21,14 +25,14 @@ public class ClientTest {
         BufferedReader fromServer = new BufferedReader(new InputStreamReader(socket.getInputStream())); 
 
         // create test values 
-        int CAR_ID = 10; 
+        int CAR_ID = 2; 
         int direction = 4; 
-        double speed = 3.14; 
-        double ultrasonic = 6.9; 
+        double speed = 1; 
+        double ultrasonic = 25; 
         int othercars = 1; 
-        double x = 9; 
-        double y = 10; 
-        double r = 11; 
+        double x = 25; 
+        double y = 25; 
+        double r = 7; 
         System.out.println("Test Values for State"); 
         System.out.println("CAR_ID = " + CAR_ID); 
         System.out.println("direction = " + direction); 
